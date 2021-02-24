@@ -11,6 +11,11 @@ import java.util.List;
  */
 public class XMLWriter {
 
+    /**
+     * Returns an open string tag with the angle brackets
+     * @param tag String tag
+     * @return Open string tag with the angle brackets
+     */
     //private String openTag(String tag) {
     public static String openTag(String tag) {
 
@@ -18,6 +23,11 @@ public class XMLWriter {
         return String.format("<%s>", tag);
     }
 
+    /**
+     * Returns an close string tag with the angle brackets
+     * @param tag String tag
+     * @return Close string tag with the angle brackets
+     */
     //private String closeTag(String tag) {
     public static String closeTag(String tag) {
 
@@ -25,6 +35,12 @@ public class XMLWriter {
         return String.format("</%s>", tag);
     }
 
+    /**
+     * Returns a string in the format "<tag>field</tag>"
+     * @param tag String tag
+     * @param field String field
+     * @return String in the format "<tag>field</tag>"
+     */
     // Returns a string in the format "<tag>field</tag>"
     private String fieldWithTags(String tag, String field) {
 

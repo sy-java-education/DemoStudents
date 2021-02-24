@@ -12,4 +12,10 @@ public interface IConstStudent {
     String TAG_YEAR = "year";
     String TAG_FACULTY = "faculty";
     String TAG_COURSE = "course";
+
+    enum Field {
+        YEAR,
+        FACULTY,
+        COURSE
+    }
 }

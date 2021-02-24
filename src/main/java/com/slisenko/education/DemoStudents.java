@@ -19,13 +19,21 @@ public class DemoStudents {
 
     public static void main(String[] args) {
 
+        String inFileName = "";
+        String outFileName = "";
         boolean fromFile = false;
 
         // The XML string with information about students
         String studentXML = null;
 
-        if ((args.length == 3) && (args[2].equals("file"))) {
+        if (args.length >= 3) {
             fromFile = true;
+            inFileName = args[2];
+            if (args.length >= 4) {
+                outFileName = args[3];
+            } else {
+                outFileName = "result.xml";
+            }
         } else {
             studentXML =
                     "<students>\n" +
@@ -56,39 +64,36 @@ public class DemoStudents {
 
             try {
                 if (fromFile) {
-                    // Output of the original XML file to the console
-                    System.out.println("Sourse file XML:");
-                    System.out.println(parserXml.fileToString(IConstDemoStudents.FILE_NAME_IN));
+                    System.out.println("Sourse file " + inFileName + ":");
+                    studentXML = parserXml.fileToString(inFileName);
                 } else {
-                    // Output of the original XML string to the console
                     System.out.println("Sourse string XML:");
-                    System.out.println(studentXML);
                 }
+                System.out.println(studentXML);
                 System.out.println();
 
-                if (fromFile) {
-                    studentList = parserXml.parseFile(IConstDemoStudents.FILE_NAME_IN);
-                }
-                else {
-                    studentList = parserXml.parseStr(studentXML);
-                }
+                studentList = parserXml.parseStr(studentXML);
+
+                // Output the list with information about students to the console
+                System.out.println("StudentList = " + studentList);
 
                 if ((studentList != null) && (!studentList.isEmpty())) {
 
                     switch (args[0]) {
                         case IConstStudent.TAG_YEAR:
-                            int year;
-                            try {
-                                year = Integer.parseInt(args[1]);
-                            } catch (NumberFormatException nfEsc) {
-                                throw new NumberFormatException("Wrong parameter year");
-                            }
-
                             // Sorting the list by the year field
                             //StudentService.sort(studentList, IConstStudent.TAG_YEAR);
                             //StudentService.sort2(studentList, IConstStudent.TAG_YEAR);
-                            StudentService.sort3(studentList, IConstStudent.TAG_YEAR);
+                            StudentService.sort3(studentList, IConstStudent.Field.YEAR);
 
+                            int year;
+                            try {
+                                year = Integer.parseInt(args[1]);
+                            } catch (NumberFormatException e) {
+                                throw new NumberFormatException("Wrong parameter year");
+                            }
+
+                            // Searching by the year field
                             for (Student st : studentList) {
                                 if (st.getYear() == year) {
                                     findList.add(st);
@@ -99,8 +104,9 @@ public class DemoStudents {
                             // Sorting the list by the faculty field
                             //StudentService.sort(studentList, IConstStudent.TAG_FACULTY);
                             //StudentService.sort2(studentList, IConstStudent.TAG_FACULTY);
-                            StudentService.sort3(studentList, IConstStudent.TAG_FACULTY);
+                            StudentService.sort3(studentList, IConstStudent.Field.FACULTY);
 
+                            // Searching by the faculty field
                             for (Student st : studentList) {
                                 if (st.getFaculty().equals(args[1])) {
                                     findList.add(st);
@@ -108,18 +114,19 @@ public class DemoStudents {
                             }
                             break;
                         case IConstStudent.TAG_COURSE:
-                            int course;
-                            try {
-                                course = Integer.parseInt(args[1]);
-                            } catch (NumberFormatException nfEsc) {
-                                throw new NumberFormatException("Wrong parameter course");
-                            }
-
                             // Sorting the list by the course field
                             //StudentService.sort(studentList, IConstStudent.TAG_COURSE);
                             //StudentService.sort2(studentList, IConstStudent.TAG_COURSE);
-                            StudentService.sort3(studentList, IConstStudent.TAG_COURSE);
+                            StudentService.sort3(studentList, IConstStudent.Field.COURSE);
 
+                            int course;
+                            try {
+                                course = Integer.parseInt(args[1]);
+                            } catch (NumberFormatException e) {
+                                throw new NumberFormatException("Wrong parameter course");
+                            }
+
+                            // Searching by the course field
                             for (Student st : studentList) {
                                 if (st.getCourse() == course) {
                                     findList.add(st);
@@ -132,18 +139,15 @@ public class DemoStudents {
                     System.out.println("FindList = " + findList);
                 }
 
-                // Output the list with information about students to the console
-                System.out.println("\nStudentList = " + studentList);
-
                 XMLWriter writer = new XMLWriter();
 
                 if (fromFile) {
                     // Writing the XML string with results of search to the file
-                    writer.write(findList, IConstDemoStudents.FILE_NAME_OUT);
+                    writer.writeToFile(findList, outFileName);
                 } else {
                     // Output the XML string with results of search to the console
                     System.out.println("Result string XML:");
-                    System.out.println(writer.write(findList));
+                    System.out.println(writer.writeToString(findList));
                 }
             } catch (NumberFormatException e) {
                 System.out.println("NumberFormatException: " + e.getMessage());
@@ -154,24 +158,14 @@ public class DemoStudents {
             } catch (IOException e) {
                 System.out.println("IOException: " + e.getMessage());
             }
-        }
-        else {
+        } else {
             System.out.println("example: DemoStudents year 1991");
             System.out.println("example: DemoStudents faculty FITU");
             System.out.println("example: DemoStudents course 3");
-            System.out.println("example: DemoStudents year 1992 file");
-            System.out.println("example: DemoStudents faculty FKSIS file");
-            System.out.println("example: DemoStudents course 4 file");
+            System.out.println("example: DemoStudents year 1992 infile.xml outfile.xml");
+            System.out.println("example: DemoStudents faculty FKSIS infile.xml outfile.xml");
+            System.out.println("example: DemoStudents course 4 infile.xml outfile.xml");
             System.out.println();
         }
     }
 }
-
-/*
-Error:java: error: release version 5 not supported.
-Решение: File->Settings->Compiler->Java Compiler->Target bytecode version = 8 (was 1.5)
-
-Error:java: Source option 5 is no longer supported. Use 6 or later.
-Не помогло: File->Settings->Compiler->Java Compiler->Project bytecode version: 8 (was: "same as kanguage level")
-Решение: File->Project Structure->Modules->Language level: "8 - Lambdas, type annotations etc." (was: "5 - 'enum' keyword, generics, autoboxing etc.")
- */

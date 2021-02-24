@@ -11,17 +11,30 @@ import java.util.List;
  */
 public class XMLWriter {
 
-    private String openTag(String tag) {
-        return "<" + tag + ">";
+    //private String openTag(String tag) {
+    public static String openTag(String tag) {
+
+        //return "<" + tag + ">";
+        return String.format("<%s>", tag);
     }
 
-    private String closeTag(String tag) {
-        return "</" + tag + ">";
+    //private String closeTag(String tag) {
+    public static String closeTag(String tag) {
+
+        //return "</" + tag + ">";
+        return String.format("</%s>", tag);
     }
 
     // Returns a string in the format "<tag>field</tag>"
     private String fieldWithTags(String tag, String field) {
-        return openTag(tag) + field + closeTag(tag);
+
+        //return openTag(tag) + field + closeTag(tag);
+        /*
+        StringBuilder sb = new StringBuilder();
+        sb.append(openTag(tag)).append(field).append(closeTag(tag));
+        return sb.toString();
+        */
+        return String.format("%s%s%s", openTag(tag), field, closeTag(tag)); // Error (?)
     }
 
     /**
@@ -31,7 +44,7 @@ public class XMLWriter {
      * @param fileName The name of the XML file for writing
      * @throws IOException
      */
-    public void write(List<Student> list, String fileName) throws IOException {
+    public void writeToFile(List<Student> list, String fileName) throws IOException {
 
         if (list == null) {
             throw new IllegalArgumentException("List pointer is NULL");
@@ -42,6 +55,7 @@ public class XMLWriter {
         }
 
         try (FileWriter fout = new FileWriter(fileName)) {
+            /*
             fout.write(openTag(IConstStudent.TAG_TABLE));
             for (Student st : list) {
                 fout.write(openTag(IConstStudent.TAG_RECORD));
@@ -57,8 +71,10 @@ public class XMLWriter {
                 fout.write(closeTag(IConstStudent.TAG_RECORD));
             }
             fout.write(closeTag(IConstStudent.TAG_TABLE));
+            */
+            fout.write(writeToString(list));
         } catch (IOException ioExc) {
-            throw new IOException("Error writing to file");
+            throw new IOException("Error writing to file " + fileName);
         }
     }
 
@@ -68,7 +84,7 @@ public class XMLWriter {
      * @param list List with objects of the Student class
      * @return XML String with information about students
      */
-    public String write(List<Student> list) {
+    public String writeToString(List<Student> list) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -79,10 +95,12 @@ public class XMLWriter {
             sb.append(fieldWithTags(IConstStudent.TAG_NAME, st.getName())); // name
             sb.append(fieldWithTags(IConstStudent.TAG_SURNAME, st.getSurname())); // surname
             //sb.append(fieldWithTags(IConstStudent.TAG_YEAR,String.valueOf(st.getYear()))); // year
-            sb.append(fieldWithTags(IConstStudent.TAG_YEAR, Integer.toString(st.getYear()))); // year
+            //sb.append(fieldWithTags(IConstStudent.TAG_YEAR, Integer.toString(st.getYear()))); // year
+            sb.append(fieldWithTags(IConstStudent.TAG_YEAR, String.format("%d", st.getYear()))); // year
             sb.append(fieldWithTags(IConstStudent.TAG_FACULTY, st.getFaculty())); // faculty
             //sb.append(fieldWithTags(IConstStudent.TAG_COURSE, String.valueOf(st.getCourse()))); // course
-            sb.append(fieldWithTags(IConstStudent.TAG_COURSE, Integer.toString(st.getCourse()))); // course
+            //sb.append(fieldWithTags(IConstStudent.TAG_COURSE, Integer.toString(st.getCourse()))); // course
+            sb.append(fieldWithTags(IConstStudent.TAG_COURSE, String.format("%d", st.getCourse()))); // course
 
             sb.append(closeTag(IConstStudent.TAG_RECORD));
         }

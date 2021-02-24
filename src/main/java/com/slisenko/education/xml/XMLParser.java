@@ -2,6 +2,7 @@ package com.slisenko.education.xml;
 
 import com.slisenko.education.student.Student;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,23 +14,32 @@ import java.util.List;
  */
 public class XMLParser {
 
-    // Returns the string between an open and close XML tags
+    /**
+     * Returns the string between an open and close XML tags
+     * @param record Xml string
+     * @param tag string without angle brackets
+     * @return the string between an open and close XML tags
+     */
     private String parseTag(String record, String tag) {
 
-        int begin = record.indexOf("<" + tag + ">"); // Opening tag
-        int end = record.indexOf("</" + tag + ">"); // Closing tag
+        //int begin = record.indexOf("<" + tag + ">"); // Opening tag
+        int begin = record.indexOf(XMLWriter.openTag(tag)); // Opening tag
+        //int end = record.indexOf("</" + tag + ">"); // Closing tag
+        int end = record.indexOf(XMLWriter.closeTag(tag)); // Closing tag
         if ((begin == -1) || (end == -1)) return "";
 
         // Returning a string between tags
-        return record.substring(begin + tag.length() + 2, end);
+        //return record.substring(begin + tag.length() + 2, end);
+        return record.substring(begin + XMLWriter.openTag(tag).length(), end); // So on feng shui
     }
 
     // Sets the string value of a field for an object of the Student class
+    /*
     private void parseFieldStr(String record, String field, Student student) {
 
         String value = parseTag(record, field);
         if (value.isEmpty()) {
-            throw new IllegalArgumentException("Tag + " + field + " is absent");
+            throw new IllegalArgumentException("Tag " + field + " is absent");
         }
         switch (field) {
             case IConstStudent.TAG_NAME:
@@ -42,13 +52,31 @@ public class XMLParser {
                 student.setFaculty(value);
         }
     }
+    */
+
+    /**
+     * Returns the value of a string field.
+     * Throws an exception if the field is missing.
+     * @param record Xml string
+     * @param field Field name without angle brackets
+     * @return Value of a string field
+     */
+    private String parseFieldStr(String record, String field) {
+
+        String value = parseTag(record, field);
+        if (value.isEmpty()) {
+            throw new IllegalArgumentException("Tag " + field + " is absent.");
+        }
+        return value;
+    }
 
     // Sets the integer value of a field for an object of the Student class
+    /*
     private void parseFieldInt(String record, String field, Student student) {
 
         String value = parseTag(record, field);
         if (value.isEmpty()) {
-            throw new IllegalArgumentException("Tag + " + field + " is absent");
+            throw new IllegalArgumentException("Tag " + field + " is absent");
         }
         try {
             int valueInt = Integer.parseInt(value);
@@ -69,9 +97,47 @@ public class XMLParser {
             }
         }
     }
+    */
 
     /**
-     * Parsing an XML string and forming a list with objects of the Student class
+     * Returns the value of an integer field.
+     * Throws an exception if the field is missing.
+     * Throws an exception if the field is wrong.
+     * @param record Xml string
+     * @param field Field name without angle brackets
+     * @return Value of an integer field
+     */
+    private int parseFieldInt(String record, String field) {
+
+        String valueStr = parseFieldStr(record, field);
+        int value;
+        try {
+            value = Integer.parseInt(valueStr);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Wrong field " + field);
+        }
+        return value;
+    }
+
+    /**
+     * Parsing information for one student.
+     * @param recordXml XML String with information about students
+     * @return Object of the Student class
+     */
+    private Student parseStudent(String recordXml) {
+
+        Student st = new Student();
+        st.setName(parseFieldStr(recordXml, IConstStudent.TAG_NAME));
+        st.setSurname(parseFieldStr(recordXml, IConstStudent.TAG_SURNAME));
+        st.setYear(parseFieldInt(recordXml, IConstStudent.TAG_YEAR));
+        st.setFaculty(parseFieldStr(recordXml, IConstStudent.TAG_FACULTY));
+        st.setCourse(parseFieldInt(recordXml, IConstStudent.TAG_COURSE));
+        return st;
+    }
+
+    /**
+     * Parsing an XML string and forming a list with objects of the Student class.
+     * Throws an exception if the XML string is empty.
      * @param strXml A string with information about students, presented in XML format
      * @return List with objects of the Student class
      */
@@ -90,32 +156,45 @@ public class XMLParser {
 
         // Parsing records
 
-        while (true) {
+        // Copy the record about the student to a separate string
+        String recordXml = parseTag(strXml, IConstStudent.TAG_RECORD);
 
-            // Copy the found record about the student to a separate string
-            String recordXml = parseTag(strXml, IConstStudent.TAG_RECORD);
+        //while (true) {
+        while (!recordXml.isEmpty()) {
 
-            if (recordXml.isEmpty()) break; // If there are no more records, then exit
+            // Copy the record about the student to a separate string
+            //String recordXml = parseTag(strXml, IConstStudent.TAG_RECORD);
+
+            //if (recordXml.isEmpty()) break; // If there are no more records, then exit
 
             // Search for the closing tag of record
-            int index = strXml.indexOf("</" + IConstStudent.TAG_RECORD + ">");
+            //int index = strXml.indexOf("</" + IConstStudent.TAG_RECORD + ">");
+            int index = strXml.indexOf(XMLWriter.closeTag(IConstStudent.TAG_RECORD));
 
             // We leave all the entries in the original XML string, except the copied one
-            strXml = strXml.substring(index + IConstStudent.TAG_RECORD.length() + 3, strXml.length()); // 3 => "</>"
+            //strXml = strXml.substring(index + IConstStudent.TAG_RECORD.length() + 3); // 3 => "</>"
+            strXml = strXml.substring(index + XMLWriter.closeTag(IConstStudent.TAG_RECORD).length());
 
             // Creating an object for a student
-            Student person = new Student();
+            //Student person = new Student();
 
             // Parsing the one record with fields
-
+            /*
             parseFieldStr(recordXml, IConstStudent.TAG_NAME, person); // name
             parseFieldStr(recordXml, IConstStudent.TAG_SURNAME, person); // surname
             parseFieldInt(recordXml, IConstStudent.TAG_YEAR, person); // year
             parseFieldStr(recordXml, IConstStudent.TAG_FACULTY, person); // faculty
             parseFieldInt(recordXml, IConstStudent.TAG_COURSE, person); // course
+            */
+
+            // Parsing the one record with fields
+            Student person = parseStudent(recordXml);
 
             // Adding the completed person object of the Student class to the list
             listStudent.add(person);
+
+            // Copy the record about the student to a separate string
+            recordXml = parseTag(strXml, IConstStudent.TAG_RECORD);
         }
 
         return listStudent;
@@ -131,10 +210,21 @@ public class XMLParser {
 
         StringBuilder sb = new StringBuilder();
 
+        /*
         try (FileReader fin = new FileReader(fileName)) {
             int ch;
             while ((ch = fin.read()) != -1) {
                 sb.append((char)ch);
+            }
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("File " + fileName + " not found");
+        }
+        */
+
+        try (BufferedReader fin = new BufferedReader(new FileReader(fileName))) {
+            String s;
+            while ((s = fin.readLine()) != null) {
+                sb.append(s + "\n");
             }
         } catch (FileNotFoundException e) {
             throw new FileNotFoundException("File " + fileName + " not found");

@@ -11,6 +11,7 @@ public class Student {
     private String faculty;
     private int course;
 
+    /*
     public Student() {
         name = "";
         surname = "";
@@ -18,6 +19,7 @@ public class Student {
         faculty = "";
         course = 0;
     }
+    */
 
     public void setName(String name) {
         this.name = name;

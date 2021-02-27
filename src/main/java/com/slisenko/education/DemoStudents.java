@@ -60,7 +60,7 @@ public class DemoStudents {
             XMLParser parserXml = new XMLParser(); // Parser
 
             // This list is intended for search results
-            List<Student> findList = new ArrayList<Student>();
+            List<Student> findList = new ArrayList<>();
 
             try {
                 if (fromFile) {

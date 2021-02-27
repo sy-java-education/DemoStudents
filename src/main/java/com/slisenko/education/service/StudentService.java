@@ -14,15 +14,9 @@ import java.util.*;
  */
 public class StudentService {
 
-    //private static Map<String, Comparator<Student>> map = new HashMap<>();
     private static Map<IConstStudent.Field, Comparator<Student>> map = new HashMap<>();
 
     static {
-        /*
-        map.put(IConstStudent.TAG_YEAR, new StudentYearComparator());
-        map.put(IConstStudent.TAG_FACULTY, new StudentFacultyComparator());
-        map.put(IConstStudent.TAG_COURSE, new StudentCourseComparator());
-        */
         map.put(IConstStudent.Field.YEAR, new StudentYearComparator());
         map.put(IConstStudent.Field.FACULTY, new StudentFacultyComparator());
         map.put(IConstStudent.Field.COURSE, new StudentCourseComparator());

@@ -1,5 +1,7 @@
 package com.slisenko.education.student;
 
+import java.util.Objects;
+
 /**
  * Class with information about students
  */
@@ -10,16 +12,6 @@ public class Student {
     private int year;
     private String faculty;
     private int course;
-
-    /*
-    public Student() {
-        name = "";
-        surname = "";
-        year = 0;
-        faculty = "";
-        course = 0;
-    }
-    */
 
     public void setName(String name) {
         this.name = name;
@@ -80,5 +72,22 @@ public class Student {
                 .append(')');
 
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Student student = (Student) o;
+        return year == student.year &&
+                course == student.course &&
+                name.equals(student.name) &&
+                surname.equals(student.surname) &&
+                faculty.equals(student.faculty);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, surname, year, faculty, course);
     }
 }

@@ -16,10 +16,8 @@ public class XMLWriter {
      * @param tag String tag
      * @return Open string tag with the angle brackets
      */
-    //private String openTag(String tag) {
     public static String openTag(String tag) {
 
-        //return "<" + tag + ">";
         return String.format("<%s>", tag);
     }
 
@@ -28,10 +26,8 @@ public class XMLWriter {
      * @param tag String tag
      * @return Close string tag with the angle brackets
      */
-    //private String closeTag(String tag) {
     public static String closeTag(String tag) {
 
-        //return "</" + tag + ">";
         return String.format("</%s>", tag);
     }
 
@@ -41,16 +37,9 @@ public class XMLWriter {
      * @param field String field
      * @return String in the format "<tag>field</tag>"
      */
-    // Returns a string in the format "<tag>field</tag>"
     private String fieldWithTags(String tag, String field) {
 
-        //return openTag(tag) + field + closeTag(tag);
-        /*
-        StringBuilder sb = new StringBuilder();
-        sb.append(openTag(tag)).append(field).append(closeTag(tag));
-        return sb.toString();
-        */
-        return String.format("%s%s%s", openTag(tag), field, closeTag(tag)); // Error (?)
+        return String.format("%s%s%s", openTag(tag), field, closeTag(tag));
     }
 
     /**
@@ -71,23 +60,6 @@ public class XMLWriter {
         }
 
         try (FileWriter fout = new FileWriter(fileName)) {
-            /*
-            fout.write(openTag(IConstStudent.TAG_TABLE));
-            for (Student st : list) {
-                fout.write(openTag(IConstStudent.TAG_RECORD));
-
-                fout.write(fieldWithTags(IConstStudent.TAG_NAME, st.getName())); // name
-                fout.write(fieldWithTags(IConstStudent.TAG_SURNAME, st.getSurname())); // surname
-                //fout.write(fieldWithTags(IConstStudent.TAG_YEAR,String.valueOf(st.getYear()))); // year
-                fout.write(fieldWithTags(IConstStudent.TAG_YEAR, Integer.toString(st.getYear()))); // year
-                fout.write(fieldWithTags(IConstStudent.TAG_FACULTY, st.getFaculty())); // faculty
-                //fout.write(fieldWithTags(IConstStudent.TAG_COURSE, String.valueOf(st.getCourse()))); // course
-                fout.write(fieldWithTags(IConstStudent.TAG_COURSE, Integer.toString(st.getCourse()))); // course
-
-                fout.write(closeTag(IConstStudent.TAG_RECORD));
-            }
-            fout.write(closeTag(IConstStudent.TAG_TABLE));
-            */
             fout.write(writeToString(list));
         } catch (IOException ioExc) {
             throw new IOException("Error writing to file " + fileName);

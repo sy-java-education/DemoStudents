@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 
 public class XMLParserTest {
 
-    public static String strXml =
+    private String strXml =
             "<students>" +
                 "<student>" +
                     "<name>Имя 3</name><surname>Фамилия 3</surname><year>1993</year><faculty>Факультет 3</faculty><course>3</course>" +
@@ -28,7 +28,6 @@ public class XMLParserTest {
     public void parseStr() {
 
         List<Student> expected = new ArrayList<>();
-
         Student student;
 
         for (int i = 0; i < 3; i++) {

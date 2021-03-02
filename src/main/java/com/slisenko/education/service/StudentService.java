@@ -71,7 +71,6 @@ public class StudentService {
      * @param list List of objects of the Student class
      * @param field The field to sort by
      */
-    //public static void sort3(List<Student> list, String field) {
     public static void sort3(List<Student> list, IConstStudent.Field field) {
 
         Comparator<Student> comp = map.get(field);

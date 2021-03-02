@@ -27,37 +27,7 @@ public class XMLWriterTest {
                 "</student>" +
             "</students>";
 
-        /*
-        Student student1 = new Student();
-        Student student2 = new Student();
-        Student student3 = new Student();
-
-        student1.setName("Имя 3");
-        student1.setSurname("Фамилия 3");
-        student1.setYear(1993);
-        student1.setFaculty("Факультет 3");
-        student1.setCourse(3);
-
-        student2.setName("Имя 2");
-        student2.setSurname("Фамилия 2");
-        student2.setYear(1992);
-        student2.setFaculty("Факультет 2");
-        student2.setCourse(2);
-
-        student3.setName("Имя 1");
-        student3.setSurname("Фамилия 1");
-        student3.setYear(1991);
-        student3.setFaculty("Факультет 1");
-        student3.setCourse(1);
-         */
-
         List<Student> list = new ArrayList<>();
-
-        /*
-        list.add(student1);
-        list.add(student2);
-        list.add(student3);
-         */
 
         Student student;
 

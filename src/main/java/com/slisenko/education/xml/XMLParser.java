@@ -22,12 +22,15 @@ public class XMLParser {
      */
     private String parseTag(String record, String tag) {
 
-        int begin = record.indexOf(XMLWriter.openTag(tag)); // Opening tag
-        int end = record.indexOf(XMLWriter.closeTag(tag)); // Closing tag
-        if ((begin == -1) || (end == -1)) return "";
+        int indexOpenTag = record.indexOf(XMLWriter.openTag(tag)); // Opening tag
+        int indexCloseTag = record.indexOf(XMLWriter.closeTag(tag)); // Closing tag
+        if ((indexOpenTag == -1) || (indexCloseTag == -1) || (indexOpenTag > indexCloseTag)) return "";
+
+        int indexOpenTagNext = record.indexOf(XMLWriter.openTag(tag), indexOpenTag + XMLWriter.openTag(tag).length());
+        if ((indexOpenTagNext != -1) && (indexOpenTagNext < indexCloseTag)) return "";
 
         // Returning a string between tags
-        return record.substring(begin + XMLWriter.openTag(tag).length(), end); // So on feng shui
+        return record.substring(indexOpenTag + XMLWriter.openTag(tag).length(), indexCloseTag); // So on feng shui
     }
 
     /**

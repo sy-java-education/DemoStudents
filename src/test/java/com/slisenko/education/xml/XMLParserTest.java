@@ -14,13 +14,13 @@ public class XMLParserTest {
     private String strXml =
             "<students>" +
                 "<student>" +
-                    "<name>Имя 3</name><surname>Фамилия 3</surname><year>1993</year><faculty>Факультет 3</faculty><course>3</course>" +
+                    "<name>Name3</name><surname>Surname3</surname><year>1993</year><faculty>Faculty3</faculty><course>3</course>" +
                 "</student>" +
                 "<student>" +
-                    "<name>Имя 2</name><surname>Фамилия 2</surname><year>1992</year><faculty>Факультет 2</faculty><course>2</course>" +
+                    "<name>Name2</name><surname>Surname2</surname><year>1992</year><faculty>Faculty2</faculty><course>2</course>" +
                 "</student>" +
                 "<student>" +
-                    "<name>Имя 1</name><surname>Фамилия 1</surname><year>1991</year><faculty>Факультет 1</faculty><course>1</course>" +
+                    "<name>Name1</name><surname>Surname1</surname><year>1991</year><faculty>Faculty1</faculty><course>1</course>" +
                 "</student>" +
             "</students>";
 
@@ -32,10 +32,10 @@ public class XMLParserTest {
 
         for (int i = 0; i < 3; i++) {
             student = new Student();
-            student.setName("Имя " + (3 - i));
-            student.setSurname("Фамилия " + (3 - i));
+            student.setName("Name" + (3 - i));
+            student.setSurname("Surname" + (3 - i));
             student.setYear(1990  + (3 - i));
-            student.setFaculty("Факультет " + (3 - i));
+            student.setFaculty("Faculty" + (3 - i));
             student.setCourse(3 - i);
             expected.add(student);
         }
@@ -49,95 +49,116 @@ public class XMLParserTest {
     @Test(expected = IllegalArgumentException.class)
     public void parseStr_BadFieldOpenTag() {
 
-        String tag = "<name>";
-        int index = strXml.indexOf(tag);
-        String badXml = strXml.substring(0,  index) + "<????>" +
-                strXml.substring(index + tag.length());
-        /*
-        String badXml = strXml.substring(0,  index) +
-                strXml.substring(index + tag.length());
-        */
+        // Bad tag <name> -> <????>
+        String badXml =
+                "<students>" +
+                    "<student>" +
+                        "<????>Name3</name><surname>Surname3</surname><year>1993</year><faculty>Faculty3</faculty><course>3</course>" +
+                    "</student>" +
+                    "<student>" +
+                        "<name>Name2</name><surname>Surname2</surname><year>1992</year><faculty>Faculty2</faculty><course>2</course>" +
+                    "</student>" +
+                    "<student>" +
+                        "<name>Name1</name><surname>Surname1</surname><year>1991</year><faculty>Faculty1</faculty><course>1</course>" +
+                    "</student>" +
+                "</students>";
 
         XMLParser parser = new XMLParser();
         List<Student> list = parser.parseStr(badXml);
-        //List<Student> list = parser.parseStr(strXml);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void parseStr_BadFieldCloseTag() {
 
-        String tag = "</year>";
-        int index = strXml.indexOf(tag);
-        /*
-        String badXml = strXml.substring(0,  index) + "</????>" +
-                strXml.substring(index + tag.length());
-        */
-        String badXml = strXml.substring(0,  index) +
-                strXml.substring(index + tag.length());
+        // Absent tag </year>
+        String badXml =
+                "<students>" +
+                    "<student>" +
+                        "<name>Name3</name><surname>Surname3</surname><year>1993<faculty>Faculty3</faculty><course>3</course>" +
+                    "</student>" +
+                    "<student>" +
+                        "<name>Name2</name><surname>Surname2</surname><year>1992</year><faculty>Faculty2</faculty><course>2</course>" +
+                    "</student>" +
+                    "<student>" +
+                        "<name>Name1</name><surname>Surname1</surname><year>1991</year><faculty>Faculty1</faculty><course>1</course>" +
+                    "</student>" +
+                "</students>";
 
         XMLParser parser = new XMLParser();
         List<Student> list = parser.parseStr(badXml);
-        //List<Student> list = parser.parseStr(strXml);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void parseStr_EmptyField() {
 
-        String openTag = "<faculty>";
-        String closeTag = "</faculty>";
-        int indexOpenTag = strXml.indexOf(openTag);
-        int indexCloseTag = strXml.indexOf(closeTag);
-        String badXml = strXml.substring(0,  indexOpenTag + openTag.length()) +
-                strXml.substring(indexCloseTag);
+        // Absent field Faculty
+        String badXml =
+                "<students>" +
+                    "<student>" +
+                        "<name>Name3</name><surname>Surname3</surname><year>1993</year><faculty></faculty><course>3</course>" +
+                    "</student>" +
+                    "<student>" +
+                        "<name>Name2</name><surname>Surname2</surname><year>1992</year><faculty>Faculty2</faculty><course>2</course>" +
+                    "</student>" +
+                    "<student>" +
+                        "<name>Name1</name><surname>Surname1</surname><year>1991</year><faculty>Faculty1</faculty><course>1</course>" +
+                    "</student>" +
+                "</students>";
 
         XMLParser parser = new XMLParser();
         List<Student> list = parser.parseStr(badXml);
-        //List<Student> list = parser.parseStr(strXml);
     }
 
     @Test(expected = NumberFormatException.class)
     public void parseStr_BadFieldNumberFormat() {
 
-        String openTag = "<course>";
-        String closeTag = "</course>";
-        String badNumber = "?";
-        int indexOpenTag = strXml.indexOf(openTag);
-        int indexCloseTag = strXml.indexOf(closeTag);
-        String badXml = strXml.substring(0,  indexOpenTag + openTag.length()) + badNumber +
-                strXml.substring(indexCloseTag);
+        // Bad field Course -> ?
+        String badXml =
+                "<students>" +
+                    "<student>" +
+                        "<name>Name3</name><surname>Surname3</surname><year>1993</year><faculty>Faculty3</faculty><course>?</course>" +
+                    "</student>" +
+                    "<student>" +
+                        "<name>Name2</name><surname>Surname2</surname><year>1992</year><faculty>Faculty2</faculty><course>2</course>" +
+                    "</student>" +
+                    "<student>" +
+                        "<name>Name1</name><surname>Surname1</surname><year>1991</year><faculty>Faculty1</faculty><course>1</course>" +
+                    "</student>" +
+                "</students>";
 
         XMLParser parser = new XMLParser();
         List<Student> list = parser.parseStr(badXml);
-        //List<Student> list = parser.parseStr(strXml);
     }
 
     @Test
     public void parseStr_BadRecordOpenTag() {
 
-        String tag = "<student>";
-        int index = strXml.indexOf(tag);
-        index = strXml.indexOf(tag, index + tag.length()); // Next tag
-        /*
-        String badXml = strXml.substring(0,  index) + "<????>" +
-                strXml.substring(index + tag.length());
-        */
-        String badXml = strXml.substring(0,  index) +
-                strXml.substring(index + tag.length());
+        // Absent tag <student>
+        String badXml =
+                "<students>" +
+                    "<student>" +
+                        "<name>Name3</name><surname>Surname3</surname><year>1993</year><faculty>Faculty3</faculty><course>3</course>" +
+                    "</student>" +
+                    "" +
+                        "<name>Name2</name><surname>Surname2</surname><year>1992</year><faculty>Faculty2</faculty><course>2</course>" +
+                    "</student>" +
+                    "<student>" +
+                        "<name>Name1</name><surname>Surname1</surname><year>1991</year><faculty>Faculty1</faculty><course>1</course>" +
+                    "</student>" +
+                "</students>";
 
         List<Student> expected = new ArrayList<>();
-
         Student student = new Student();
 
-        student.setName("Имя 3");
-        student.setSurname("Фамилия 3");
+        student.setName("Name3");
+        student.setSurname("Surname3");
         student.setYear(1993);
-        student.setFaculty("Факультет 3");
+        student.setFaculty("Faculty3");
         student.setCourse(3);
         expected.add(student);
 
         XMLParser parser = new XMLParser();
         List<Student> actual = parser.parseStr(badXml);
-        //List<Student> actual = parser.parseStr(strXml);
 
         Assert.assertEquals(expected, actual);
     }
@@ -145,30 +166,32 @@ public class XMLParserTest {
     @Test
     public void parseStr_BadRecordCloseTag() {
 
-        String tag = "</student>";
-        int index = strXml.indexOf(tag);
-        index = strXml.indexOf(tag, index + tag.length()); // Next tag
+        // Bad tag </student> -> <????>
+        String badXml =
+                "<students>" +
+                    "<student>" +
+                        "<name>Name3</name><surname>Surname3</surname><year>1993</year><faculty>Faculty3</faculty><course>3</course>" +
+                    "</student>" +
+                    "<student>" +
+                        "<name>Name2</name><surname>Surname2</surname><year>1992</year><faculty>Faculty2</faculty><course>2</course>" +
+                    "<????>" +
+                    "<student>" +
+                        "<name>Name1</name><surname>Surname1</surname><year>1991</year><faculty>Faculty1</faculty><course>1</course>" +
+                    "</student>" +
+                "</students>";
 
-        String badXml = strXml.substring(0,  index) + "</????>" +
-                strXml.substring(index + tag.length());
-        /*
-        String badXml = strXml.substring(0,  index) +
-                strXml.substring(index + tag.length());
-        */
         List<Student> expected = new ArrayList<>();
-
         Student student = new Student();
 
-        student.setName("Имя 3");
-        student.setSurname("Фамилия 3");
+        student.setName("Name3");
+        student.setSurname("Surname3");
         student.setYear(1993);
-        student.setFaculty("Факультет 3");
+        student.setFaculty("Faculty3");
         student.setCourse(3);
         expected.add(student);
 
         XMLParser parser = new XMLParser();
         List<Student> actual = parser.parseStr(badXml);
-        //List<Student> actual = parser.parseStr(strXml);
 
         Assert.assertEquals(expected, actual);
     }
@@ -176,17 +199,22 @@ public class XMLParserTest {
     @Test
     public void parseStr_BadTableOpenTag() {
 
-        String tag = "<students>";
-        int index = strXml.indexOf(tag);
-        String badXml = strXml.substring(0,  index) + "<????>" +
-                strXml.substring(index + tag.length());
-        /*
-        String badXml = strXml.substring(0,  index) +
-                strXml.substring(index + tag.length());
-        */
+        // Bad tag <students> -> <????>
+        String badXml =
+                "<????>" +
+                    "<student>" +
+                        "<name>Name3</name><surname>Surname3</surname><year>1993</year><faculty>Faculty3</faculty><course>3</course>" +
+                    "</student>" +
+                    "<student>" +
+                        "<name>Name2</name><surname>Surname2</surname><year>1992</year><faculty>Faculty2</faculty><course>2</course>" +
+                    "</student>" +
+                    "<student>" +
+                        "<name>Name1</name><surname>Surname1</surname><year>1991</year><faculty>Faculty1</faculty><course>1</course>" +
+                    "</student>" +
+                "</students>";
+
         XMLParser parser = new XMLParser();
         List<Student> list = parser.parseStr(badXml);
-        //List<Student> list = parser.parseStr(strXml);
 
         Assert.assertTrue(list.isEmpty());
     }
@@ -194,20 +222,23 @@ public class XMLParserTest {
     @Test
     public void parseStr_BadTableCloseTag() {
 
-        String tag = "</students>";
-        int index = strXml.indexOf(tag);
-        /*
-        String badXml = strXml.substring(0,  index) + "</????>" +
-                strXml.substring(index + tag.length());
-        */
-        String badXml = strXml.substring(0,  index) +
-                strXml.substring(index + tag.length());
+        // Absent tag </students>
+        String badXml =
+                "<students>" +
+                    "<student>" +
+                        "<name>Name3</name><surname>Surname3</surname><year>1993</year><faculty>Faculty3</faculty><course>3</course>" +
+                    "</student>" +
+                    "<student>" +
+                        "<name>Name2</name><surname>Surname2</surname><year>1992</year><faculty>Faculty2</faculty><course>2</course>" +
+                    "</student>" +
+                    "<student>" +
+                        "<name>Name1</name><surname>Surname1</surname><year>1991</year><faculty>Faculty1</faculty><course>1</course>" +
+                    "</student>" +
+                "";
 
         XMLParser parser = new XMLParser();
         List<Student> list = parser.parseStr(badXml);
-        //List<Student> list = parser.parseStr(strXml);
 
-        //Assert.assertTrue(list.isEmpty());
         if (!list.isEmpty()) {
             Assert.fail();
         }

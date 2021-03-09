@@ -26,19 +26,19 @@ public class StudentServiceTest {
 
             // Create an unsorted list
             student = new Student();
-            student.setName("Имя " + (3 - i));
-            student.setSurname("Фамилия " + (3 - i));
+            student.setName("Name" + (3 - i));
+            student.setSurname("Surname" + (3 - i));
             student.setYear(1990  + (3 - i));
-            student.setFaculty("Факультет " + (3 - i));
+            student.setFaculty("Faculty" + (3 - i));
             student.setCourse(3 - i);
             listStudent.add(student);
 
             // Create a sorted list
             student = new Student();
-            student.setName("Имя " + (i + 1));
-            student.setSurname("Фамилия " + (i + 1));
+            student.setName("Name" + (i + 1));
+            student.setSurname("Surname" + (i + 1));
             student.setYear(1990  + (i + 1));
-            student.setFaculty("Факультет " + (i + 1));
+            student.setFaculty("Faculty" + (i + 1));
             student.setCourse(i + 1);
             actual.add(student);
         }

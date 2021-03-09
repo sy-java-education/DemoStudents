@@ -216,9 +216,7 @@ public class XMLParserTest {
         XMLParser parser = new XMLParser();
         List<Student> list = parser.parseStr(badXml);
 
-        if (!list.isEmpty()) {
-            Assert.fail();
-        }
+        Assert.assertTrue(list.isEmpty());
     }
 
     @Test
@@ -241,8 +239,6 @@ public class XMLParserTest {
         XMLParser parser = new XMLParser();
         List<Student> list = parser.parseStr(badXml);
 
-        if (!list.isEmpty()) {
-            Assert.fail();
-        }
+        Assert.assertTrue(list.isEmpty());
     }
 }

@@ -17,13 +17,13 @@ public class XMLWriterTest {
         String expected =
             "<students>" +
                 "<student>" +
-                    "<name>Имя 3</name><surname>Фамилия 3</surname><year>1993</year><faculty>Факультет 3</faculty><course>3</course>" +
+                    "<name>Name3</name><surname>Surname3</surname><year>1993</year><faculty>Faculty3</faculty><course>3</course>" +
                 "</student>" +
                 "<student>" +
-                    "<name>Имя 2</name><surname>Фамилия 2</surname><year>1992</year><faculty>Факультет 2</faculty><course>2</course>" +
+                    "<name>Name2</name><surname>Surname2</surname><year>1992</year><faculty>Faculty2</faculty><course>2</course>" +
                 "</student>" +
                 "<student>" +
-                    "<name>Имя 1</name><surname>Фамилия 1</surname><year>1991</year><faculty>Факультет 1</faculty><course>1</course>" +
+                    "<name>Name1</name><surname>Surname1</surname><year>1991</year><faculty>Faculty1</faculty><course>1</course>" +
                 "</student>" +
             "</students>";
 
@@ -33,10 +33,10 @@ public class XMLWriterTest {
 
         for (int i = 0; i < 3; i++) {
             student = new Student();
-            student.setName("Имя " + (3 - i));
-            student.setSurname("Фамилия " + (3 - i));
+            student.setName("Name" + (3 - i));
+            student.setSurname("Surname" + (3 - i));
             student.setYear(1990  + (3 - i));
-            student.setFaculty("Факультет " + (3 - i));
+            student.setFaculty("Faculty" + (3 - i));
             student.setCourse(3 - i);
             list.add(student);
         }

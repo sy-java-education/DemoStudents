@@ -13,6 +13,22 @@ public class Student {
     private String faculty;
     private int course;
 
+    public Student(String name, String surname, int year, String faculty, int course) {
+        this.name = name;
+        this.surname = surname;
+        this.year = year;
+        this.faculty = faculty;
+        this.course = course;
+    }
+
+    public Student() {
+        name = "";
+        surname = "";
+        year = 0;
+        faculty = "";
+        course = 0;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

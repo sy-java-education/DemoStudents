@@ -6,95 +6,100 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
+@RunWith(value = Parameterized.class)
 public class StudentServiceTest {
 
-    private static List<Student> listStudent = new ArrayList<>();
     private static List<Student> actual = new ArrayList<>();
+    private String fieldForSort;
 
-    @BeforeClass
-    public static void setUp() {
+    public StudentServiceTest(String fieldForSort) {
 
-        Student student;
+        this.fieldForSort = fieldForSort;
+    }
 
-        for (int i = 0; i < 3; i++) {
+    @Parameterized.Parameters(name = "{index}: fieldForSort - {0}")
+    public static Object[] data () {
 
-            // Create an unsorted list
-            student = new Student();
-            student.setName("Имя " + (3 - i));
-            student.setSurname("Фамилия " + (3 - i));
-            student.setYear(1990  + (3 - i));
-            student.setFaculty("Факультет " + (3 - i));
-            student.setCourse(3 - i);
-            listStudent.add(student);
+        return new Object[] {
+            "year",
+            "faculty",
+            "course"
+        };
+    }
 
-            // Create a sorted list
-            student = new Student();
-            student.setName("Имя " + (i + 1));
-            student.setSurname("Фамилия " + (i + 1));
-            student.setYear(1990  + (i + 1));
-            student.setFaculty("Факультет " + (i + 1));
-            student.setCourse(i + 1);
-            actual.add(student);
+    private List<Student> getSortedList(String field) {
+
+        List<Student> list = new ArrayList<>();
+
+        switch (field) {
+            case IConstStudent.TAG_YEAR:
+                list.add(new Student("Name3", "Surname3", 1991, "Faculty1", 2));
+                list.add(new Student("Name2", "Surname2", 1992, "Faculty3", 1));
+                list.add(new Student("Name1", "Surname1", 1993, "Faculty2", 3));
+                break;
+            case IConstStudent.TAG_FACULTY:
+                list.add(new Student("Name3", "Surname3", 1991, "Faculty1", 2));
+                list.add(new Student("Name1", "Surname1", 1993, "Faculty2", 3));
+                list.add(new Student("Name2", "Surname2", 1992, "Faculty3", 1));
+                break;
+            case IConstStudent.TAG_COURSE:
+                list.add(new Student("Name2", "Surname2", 1992, "Faculty3", 1));
+                list.add(new Student("Name3", "Surname3", 1991, "Faculty1", 2));
+                list.add(new Student("Name1", "Surname1", 1993, "Faculty2", 3));
+                break;
         }
+        return list;
+    }
+
+    @Before
+    public void setUp() {
+
+        actual.clear();
+        actual.add(new Student("Name1", "Surname1", 1993, "Faculty2", 3));
+        actual.add(new Student("Name2", "Surname2", 1992, "Faculty3", 1));
+        actual.add(new Student("Name3", "Surname3", 1991, "Faculty1", 2));
     }
 
     @Test
     public void sort() {
 
-        List<Student> expected;
-
-        expected = new ArrayList<>(listStudent);
-        StudentService.sort(expected, IConstStudent.TAG_YEAR);
-        Assert.assertEquals("Error sorting by year", expected, actual);
-
-        expected = new ArrayList<>(listStudent);
-        StudentService.sort(expected, IConstStudent.TAG_FACULTY);
-        Assert.assertEquals("Error sorting by faculty", expected, actual);
-
-        expected = new ArrayList<>(listStudent);
-        StudentService.sort(expected, IConstStudent.TAG_COURSE);
-        Assert.assertEquals("Error sorting by course", expected, actual);
+        StudentService.sort(actual, fieldForSort);
+        Assert.assertEquals("Error sorting by " + fieldForSort, getSortedList(fieldForSort), actual);
     }
 
     @Test
     public void sort2() {
 
-        List<Student> expected;
-
-        expected = new ArrayList<>(listStudent);
-        StudentService.sort2(expected, IConstStudent.TAG_YEAR);
-        Assert.assertEquals("Error sorting by year", expected, actual);
-
-        expected = new ArrayList<>(listStudent);
-        StudentService.sort2(expected, IConstStudent.TAG_FACULTY);
-        Assert.assertEquals("Error sorting by faculty", expected, actual);
-
-        expected = new ArrayList<>(listStudent);
-        StudentService.sort2(expected, IConstStudent.TAG_COURSE);
-        Assert.assertEquals("Error sorting by course", expected, actual);
+        StudentService.sort2(actual, fieldForSort);
+        Assert.assertEquals("Error sorting by " + fieldForSort, getSortedList(fieldForSort), actual);
     }
 
     @Test
     public void sort3() {
 
-        List<Student> expected;
+        IConstStudent.Field field = IConstStudent.Field.YEAR;
 
-        expected = new ArrayList<>(listStudent);
-        StudentService.sort3(expected, IConstStudent.Field.YEAR);
-        Assert.assertEquals("Error sorting by year", expected, actual);
+        switch (fieldForSort) {
+            case IConstStudent.TAG_YEAR:
+                field = IConstStudent.Field.YEAR;
+                break;
+            case IConstStudent.TAG_FACULTY:
+                field = IConstStudent.Field.FACULTY;
+                break;
+            case IConstStudent.TAG_COURSE:
+                field = IConstStudent.Field.COURSE;
+                break;
+        }
 
-        expected = new ArrayList<>(listStudent);
-        StudentService.sort3(expected, IConstStudent.Field.FACULTY);
-        Assert.assertEquals("Error sorting by faculty", expected, actual);
-
-        expected = new ArrayList<>(listStudent);
-        StudentService.sort3(expected, IConstStudent.Field.COURSE);
-        Assert.assertEquals("Error sorting by course", expected, actual);
+        StudentService.sort3(actual, field);
+        Assert.assertEquals("Error sorting by " + fieldForSort, getSortedList(fieldForSort), actual);
     }
 }

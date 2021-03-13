@@ -82,9 +82,7 @@ public class DemoStudents {
                     switch (args[0]) {
                         case IConstStudent.TAG_YEAR:
                             // Sorting the list by the year field
-                            //StudentService.sort(studentList, IConstStudent.TAG_YEAR);
-                            //StudentService.sort2(studentList, IConstStudent.TAG_YEAR);
-                            StudentService.sort3(studentList, IConstStudent.Field.YEAR);
+                            StudentService.sort(studentList, args[0]);
 
                             int year;
                             try {
@@ -102,9 +100,7 @@ public class DemoStudents {
                             break;
                         case IConstStudent.TAG_FACULTY:
                             // Sorting the list by the faculty field
-                            //StudentService.sort(studentList, IConstStudent.TAG_FACULTY);
-                            //StudentService.sort2(studentList, IConstStudent.TAG_FACULTY);
-                            StudentService.sort3(studentList, IConstStudent.Field.FACULTY);
+                            StudentService.sort2(studentList, args[0]);
 
                             // Searching by the faculty field
                             for (Student st : studentList) {
@@ -115,8 +111,6 @@ public class DemoStudents {
                             break;
                         case IConstStudent.TAG_COURSE:
                             // Sorting the list by the course field
-                            //StudentService.sort(studentList, IConstStudent.TAG_COURSE);
-                            //StudentService.sort2(studentList, IConstStudent.TAG_COURSE);
                             StudentService.sort3(studentList, IConstStudent.Field.COURSE);
 
                             int course;
